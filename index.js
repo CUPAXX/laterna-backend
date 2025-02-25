@@ -2,6 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const { response } = require("./src/utils/standardRes");
+const rootRoutes = require("./src/routes");
 
 const { PORT } = process.env;
 
@@ -20,3 +22,9 @@ app.use(cors());
 server.listen(PORT || 8000, () => {
   console.log(`Backend running on port ${PORT || 8000}`);
 });
+
+app.get("/", (req, res) => {
+  return response(res, 200, true, "Hello there, this is Laterna backend!!!");
+});
+
+app.use("/", rootRoutes);
