@@ -1,6 +1,7 @@
 const userModels = require("../models/user");
 const { response } = require("../utils/standardRes");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 exports.createUserController = async (req, res) => {
   const body = req.body;
@@ -30,8 +31,27 @@ exports.loginUserController = async (req, res) => {
   );
 
   if (comparePassword) {
-    return response(res, 200, true, "Login success!");
+    const generateToken = jwt.sign(userData[0], process.env.APP_KEY, {
+      expiresIn: "1m",
+    });
+
+    return response(res, 200, true, "Login success!", { token: generateToken });
   } else {
     return response(res, 200, true, "Wrong password!!");
   }
+};
+
+exports.checkLoginTokenController = async (req, res) => {
+  const body = req.body;
+
+  try {
+    const verifyToken = jwt.verify(body.token, process.env.APP_KEY);
+    if(verifyToken) return response(res, 200, true, "Token still active!")
+  } catch (error) {
+    if (error.message === "jwt expired") {
+      return response(res, 200, true, "Token Expired!!");
+    } else {
+      return response(res, 200, true, "Token Invalid!!");
+    }
+  } 
 };
