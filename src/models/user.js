@@ -7,3 +7,7 @@ exports.createUser = (data) => {
     `INSERT INTO user (email, password) VALUES ("${data.email}", "${data.password}")`
   );
 };
+
+exports.getUserByEmail = (email) => {
+  return dbPromise(`SELECT * from user WHERE email="${email}"`);
+};
