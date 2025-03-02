@@ -11,3 +11,7 @@ exports.createUser = (data) => {
 exports.getUserByEmail = (email) => {
   return dbPromise(`SELECT * from user WHERE email="${email}"`);
 };
+
+exports.updateRoleUser = (email, role) => {
+  return dbPromise(`UPDATE user SET role="${role}" WHERE email="${email}"`);
+};
